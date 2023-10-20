@@ -6,7 +6,7 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.ViewManagerModel;
-import use_case.login.LoginUserDataAccessInterface;
+import use_case.clear_users.ClearUserDataAccessInterface;
 import view.LoggedInView;
 import view.LoginView;
 import view.SignupView;
@@ -50,7 +50,8 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject);
+        ClearUserDataAccessInterface clearUserDataAccess = (ClearUserDataAccessInterface) userDataAccessObject;
+        SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject, clearUserDataAccess);
         views.add(signupView, signupView.viewName);
 
         LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);

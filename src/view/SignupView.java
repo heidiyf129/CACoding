@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.clear_users.ClearController;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
@@ -22,16 +23,19 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
     private final SignupController signupController;
 
+    private final ClearController clearController;
+
     private final JButton signUp;
     private final JButton cancel;
 
-    // TODO Note: this is the new JButton for clearing the users file
+    //Note: this is the new JButton for clearing the users file
     private final JButton clear;
 
-    public SignupView(SignupController controller, SignupViewModel signupViewModel) {
+    public SignupView(SignupController controller, SignupViewModel signupViewModel, ClearController clearController) {
 
         this.signupController = controller;
         this.signupViewModel = signupViewModel;
+        this.clearController = clearController;
         signupViewModel.addPropertyChangeListener(this);
 
         JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
@@ -50,10 +54,11 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
         buttons.add(cancel);
 
-        // TODO Note: the following line instantiates the "clear" button; it uses
+        //Note: the following line instantiates the "clear" button; it uses
         //      a CLEAR_BUTTON_LABEL constant which is defined in the SignupViewModel class.
         //      You need to add this "clear" button to the "buttons" panel.
         clear = new JButton(SignupViewModel.CLEAR_BUTTON_LABEL);
+        buttons.add(clear);
 
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -72,14 +77,19 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        // TODO Add the body to the actionPerformed method of the action listener below
+        //Add the body to the actionPerformed method of the action listener below
         //      for the "clear" button. You'll need to write the controller before
         //      you can complete this.
         clear.addActionListener(
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        String deletedUsers = clearController.clearAllUsers();
+                        if (!deletedUsers.isEmpty()) {
+                            JOptionPane.showMessageDialog(SignupView.this, "The following users have been deleted: " + deletedUsers);
+                        } else {
+                            JOptionPane.showMessageDialog(SignupView.this, "No users to delete.");
+                        }
                     }
                 }
         );

@@ -4,14 +4,14 @@ import entity.User;
 import entity.UserFactory;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
+import use_case.clear_users.ClearUserDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, ClearUserDataAccessInterface {
 
     private final File csvFile;
 
@@ -88,6 +88,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
 
     /**
      * Return whether a user exists with username identifier.
+     *
      * @param identifier the username to check.
      * @return whether a user exists with username identifier
      */
@@ -96,4 +97,25 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
         return accounts.containsKey(identifier);
     }
 
+    @Override
+    public String clearAllUserData() {
+        // Concatenate the usernames, separated by ", "
+        String deletedUsers = String.join(", ", accounts.keySet());
+
+        // Clear the in-memory storage
+        accounts.clear();
+
+        // Clear the contents of the CSV file
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(csvFile, false)); // false means do not append, i.e., clear the file.
+            writer.print(""); // write empty string to the file
+            writer.close();
+        } catch (IOException e) {
+            // Handle exceptions
+            throw new RuntimeException("Failed to clear user data", e);
+        }
+
+        return deletedUsers;
+    }
 }
+

@@ -1,6 +1,8 @@
 package use_case.clear_users;
 
-// TODO Complete me
+//Complete me
 
 public class ClearInputData {
+    void clearAllUsers() {
+    }
 }

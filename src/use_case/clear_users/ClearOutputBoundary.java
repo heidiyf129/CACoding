@@ -1,6 +1,7 @@
 package use_case.clear_users;
 
-// TODO Complete me
+//Complete me
 
 public interface ClearOutputBoundary {
+    void presentClearResult(ClearOutputData outputData);
 }
